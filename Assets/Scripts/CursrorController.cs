@@ -18,11 +18,20 @@ public class CursrorController : MonoBehaviour
     public GameObject teleOrigin;
     public GameObject teleTarget;
     public PlayerController player;
+    public BatController bat;
        
     public float cursorDistance;
     public float TeleportDistance;
 
     private PlayerControls playerControls;
+
+    public Vector3 _previousCursorPosition;
+    public Vector3 _currentCursorPosition;
+    public bool _isMovingRight;
+    public float toleranceRight;
+    public bool _isMovingLeft;
+    public float toleranceLeft;
+
 
     private void Awake()
     {
@@ -49,7 +58,7 @@ public class CursrorController : MonoBehaviour
 
     private void Start()
     {
-        
+        _previousCursorPosition = worldPosition;
     }
 
 //void OnGUI()
@@ -113,6 +122,48 @@ public class CursrorController : MonoBehaviour
         if (cursorDistance > player.MaxTeleportDistance)
         {
             teleTarget.transform.position = teleOrigin.transform.position - TeleportDirection.normalized * player.MaxTeleportDistance;
-        }       
+        }
+
+        CheckMoveDirection();       
+    }
+
+    public void CheckMoveDirection()
+    {
+        _currentCursorPosition = worldPosition;
+
+        if (_currentCursorPosition != _previousCursorPosition)
+        {
+            bat.isMoving = true;
+
+            if (_currentCursorPosition.x > _previousCursorPosition.x + toleranceRight)
+            {
+                bat.isFacingRight = true;
+                _isMovingRight = true;
+                _isMovingLeft = false;
+
+                Vector3 scale = bat.transform.localScale;
+                scale.x = -1;
+                bat.transform.localScale = scale;
+            }
+            
+            if (_currentCursorPosition.x < _previousCursorPosition.x - toleranceLeft)
+            {
+                bat.isFacingRight = false;
+                _isMovingRight = false;
+                _isMovingLeft = true;
+
+                Vector3 scale = bat.transform.localScale;
+                scale.x = 1;
+                bat.transform.localScale = scale;
+            }
+        }
+        else if (_currentCursorPosition == _previousCursorPosition)
+        {
+            bat.isMoving = false;
+            _isMovingRight = false;
+            _isMovingLeft = false;
+        }
+
+        _previousCursorPosition = _currentCursorPosition;
     }
 }

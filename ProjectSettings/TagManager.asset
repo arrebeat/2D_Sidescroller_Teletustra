@@ -24,6 +24,8 @@ TagManager:
   - SpiritBar
   - ContainerWave
   - ContainerTally
+  - Bat
+  - Damage
   layers:
   - Default
   - TransparentFX

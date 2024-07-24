@@ -26,4 +26,17 @@ public class HealthBase : MonoBehaviour
             player.Die();
         }
     }
+
+    protected virtual void DetectDamage()
+    {
+
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Damage")) 
+        {
+            //Debug.Log("DAMAGE DETECTED");
+        }
+    }
 }

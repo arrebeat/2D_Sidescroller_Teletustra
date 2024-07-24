@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
     public float LastPressedJumpTime { get; private set; }
     public float LastLeftClickTime { get; private set; }
 
+    public BatController bat;
+
     private Coroutine teleportCharge;
 
     // Mouse
@@ -113,6 +115,9 @@ public class PlayerController : MonoBehaviour
         playerControls.InGame.Teleport.started += Teleport_started;
         //playerControls.InGame.Teleport.performed += Teleport;
         playerControls.InGame.Teleport.canceled += Teleport_canceled;
+
+        playerControls.InGame.Shoot.started += Shoot_started;
+        playerControls.InGame.Shoot.canceled += Shoot_canceled;
     }
     
     private void OnEnable() 
@@ -323,7 +328,7 @@ public class PlayerController : MonoBehaviour
 #region INPUT CALLBACKS
     private void Walk_started(InputAction.CallbackContext context)
     {
-        Debug.Log(context);
+        //Debug.Log(context);
         
         //WalkTime = 0;
         
@@ -342,7 +347,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Walk_canceled(InputAction.CallbackContext context)
     {
-        Debug.Log(context);
+        //Debug.Log(context);
                 
         if (!IsRunning)
         {
@@ -379,7 +384,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Jump_started (InputAction.CallbackContext context)
     {
-        Debug.Log(context);
+        //Debug.Log(context);
         //Ensures we can't call Jump multiple times from one press
         LastOnGroundTime = 0;
         //_canJump = false;
@@ -397,7 +402,7 @@ public class PlayerController : MonoBehaviour
 
     private void Teleport_started(InputAction.CallbackContext context)
     {
-        Debug.Log(context);
+        //Debug.Log(context);
         LeftClick = true;
         teleportCharge = StartCoroutine(DelayedAction(context));        
     }
@@ -410,13 +415,24 @@ public class PlayerController : MonoBehaviour
 
     private void Teleport_canceled(InputAction.CallbackContext context)
     {
-        Debug.Log(context);
+        //Debug.Log(context);
         LeftClick = false;
         HasTeleported = false;
 
         StopCoroutine(teleportCharge);
-        Debug.Log("COROUTINE STOPPED");
+        //Debug.Log("COROUTINE STOPPED");
     }
+
+    private void Shoot_started(InputAction.CallbackContext context)
+    {
+        bat.Shoot();
+    }
+
+    private void Shoot_canceled(InputAction.CallbackContext context)
+    {
+        
+    }
+
 #endregion
 
     private void Run(float LerpAmount)
