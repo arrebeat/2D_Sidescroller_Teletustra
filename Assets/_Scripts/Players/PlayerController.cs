@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     public SplineFollower follower { get; private set;}
     public CursrorController cursor;
     public MMF_Player feedbacks { get; private set; }
+    public MMF_Particles walkSmoke { get; private set; }
+    public MMF_Particles jumpSmoke { get; private set; }
     public SpriteRenderer[] renderers { get; private set; }
     public SOPlayerData_Teletustra soPlayerData;
 
@@ -43,6 +45,7 @@ public class PlayerController : MonoBehaviour
     // Jump
     public bool IsJumping { get; private set; }
     public bool IsFalling { get; private set; }
+    public bool isGrounded;
     private bool _canJump;
     private bool _isJumpCut;
     private bool _isJumpFalling;
@@ -103,6 +106,8 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         follower = GetComponent<SplineFollower>();
         feedbacks = GetComponent<MMF_Player>();
+        walkSmoke = feedbacks.GetFeedbackOfType<MMF_Particles>(searchedLabel:"WalkSmoke");
+        jumpSmoke = feedbacks.GetFeedbackOfType<MMF_Particles>(searchedLabel:"JumpSmoke");
         renderers = GetComponentsInChildren<SpriteRenderer>(true);
         playerControls = new PlayerControls();
         
@@ -158,11 +163,13 @@ public class PlayerController : MonoBehaviour
             {
                 LastOnGroundTime = soPlayerData.coyoteTime;
                 HasTeleported = false;
+                isGrounded = true;
             }
 
             if (!Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer))
             {
                 IsFalling = true;
+                isGrounded = false;
             }
         }        
         #endregion
@@ -333,6 +340,9 @@ public class PlayerController : MonoBehaviour
         
         //WalkTime = 0;
         
+        if (isGrounded)
+            walkSmoke.Play(transform.position, 1);
+
         if (LastPressedWalkTime > 0)
         {
             //walkSpeed = runSpeed;
@@ -349,7 +359,9 @@ public class PlayerController : MonoBehaviour
     private void Walk_canceled(InputAction.CallbackContext context)
     {
         //Debug.Log(context);
-                
+
+        walkSmoke.Stop(transform.position, 1);
+ 
         if (!IsRunning)
         {
             LastPressedWalkTime = soPlayerData.doubleTapToRunTime;
@@ -526,6 +538,9 @@ public class PlayerController : MonoBehaviour
     {
         //Debug.Log("Jump " + context);
         
+        walkSmoke.Stop(transform.position, 1);
+        jumpSmoke.Play(transform.position, 1);
+
         if (context.performed)
         {
             if (_canJump == true)

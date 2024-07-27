@@ -19,7 +19,7 @@ MonoBehaviour:
   runAccelTime: 0.5
   runDeccelTime: 0.7
   doubleTapToRunTime: 0.1
-  jumpSpeed: 13
+  jumpSpeed: 7
   coyoteTime: 0.2
   jumpInputBufferTime: 0.25
   teleportChargeTimeFactor: 0.05

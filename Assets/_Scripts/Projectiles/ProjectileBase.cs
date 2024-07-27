@@ -17,10 +17,7 @@ public class ProjectileBase : MonoBehaviour
 
     void Start()
     {
-        if (_coroutine == null)
-        {
-            _coroutine = StartCoroutine(SelfDestroy());
-        }
+        SelfDestroy();
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -40,11 +37,8 @@ public class ProjectileBase : MonoBehaviour
         }    
     }
 
-    public IEnumerator SelfDestroy()
+    public void SelfDestroy()
     {
-        yield return new WaitForSeconds(timeToDestroy);
-        Destroy(this.gameObject);
-
-        yield return null;
+        Destroy(this.gameObject, timeToDestroy);
     } 
 }
