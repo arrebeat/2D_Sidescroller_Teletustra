@@ -537,6 +537,8 @@ public class PlayerController : MonoBehaviour
     public void Jump(InputAction.CallbackContext context = default)
     {
         //Debug.Log("Jump " + context);
+        MMF_AudioSource jumpSfx = feedbacks.GetFeedbackOfType<MMF_AudioSource>(searchedLabel:"Jump");
+        jumpSfx.Play(transform.position, 1);
         
         walkSmoke.Stop(transform.position, 1);
         jumpSmoke.Play(transform.position, 1);
@@ -558,6 +560,13 @@ public class PlayerController : MonoBehaviour
         
         follower.SetPercent(1);
         HasTeleported = true;
+    }
+
+    public void PlaySfxFootsteps()
+    {
+        MMF_AudioSource footstep = feedbacks.GetFeedbackOfType<MMF_AudioSource>(searchedLabel:"Footsteps");
+
+        footstep.Play(transform.position, 1);
     }
 
     #region CHECK METHODS

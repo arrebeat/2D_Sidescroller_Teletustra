@@ -35,23 +35,29 @@ public class ItemBase : MonoBehaviour
     {
         //Debug.Log("Collected");
         MMF_ParticlesInstantiation collected = feedbacks.GetFeedbackOfType<MMF_ParticlesInstantiation>();
-        spriteRenderer.enabled = false;
+        MMF_AudioSource collectedSfx = feedbacks.GetFeedbackOfType<MMF_AudioSource>();
         collected.Play(transform.position, 1);
+        collectedSfx.Play(transform.position, 1);
 
+        spriteRenderer.enabled = false;
+        
         ItemManager.instance.CollectOnion();
 
-        Destroy(gameObject);
+        Destroy(gameObject, 0.5f);
     }
 
     protected virtual void Consumed()
     {
         //Debug.Log("Consumed");
         MMF_ParticlesInstantiation collected = feedbacks.GetFeedbackOfType<MMF_ParticlesInstantiation>();
-        spriteRenderer.enabled = false;
+        MMF_AudioSource collectedSfx = feedbacks.GetFeedbackOfType<MMF_AudioSource>();
         collected.Play(transform.position, 1);
+        collectedSfx.Play(transform.position, 1);
 
+        spriteRenderer.enabled = false;
+        
         ItemManager.instance.ConsumeOnion();
 
-        Destroy(gameObject);
+        Destroy(gameObject, 0.5f);
     }
 }
